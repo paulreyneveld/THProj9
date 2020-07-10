@@ -141,25 +141,13 @@ router.get('/courses', asyncHandler(async (req, res) => {
       model: User,
       attributes: ["id", "firstName", "lastName", "emailAddress"]
     }]
-  });
-    res.json(courses);
+  }).then(courses => res.json({ courses }));
     res.status(200).end();
 }));
 
 // GET Obtains the course with the pertinent ID. 
 router.get('/courses/:id', asyncHandler(async (req, res) => {
-    const course = await Course.findAll(
-        {
-            where: {
-                id: req.params.id
-            },
-            include: [{
-                model: User,
-                attributes: ["id", "firstName", "lastName", "emailAddress"]
-              }]
-        }
-    )
-    
+    const course = await Course.findByPk(req.params.id);
     res.json(course);
     res.status(200).end();
 }));
@@ -181,7 +169,7 @@ router.post('/courses', authenticateUser, asyncHandler(async (req, res, next) =>
         }
         else {
             const course = await Course.create(req.body);
-            res.status(201).location('/').end();
+            res.status(201).location('api/courses/' + course.id).end();
         }
     }
     catch (error) {
