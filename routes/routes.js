@@ -59,10 +59,8 @@ const authenticateUser = async (req, res, next) => {
         if (user) {
             const authenticated = bcryptjs
             .compareSync(credentials.pass, user.password);
-            console.log(authenticated);
             if (authenticated) {
                 req.currentUser = user;
-                console.log(req.currentUser);
             } 
             else {
                 message = `Authentication failure for username: ${user.emailAddress}`;
